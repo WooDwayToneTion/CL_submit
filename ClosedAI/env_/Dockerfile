@@ -1,1 +1,5 @@
-FROM pytorch/pytorch:1.12.1-cuda11.3-cudnn8-runtime
+FROM python:3.8.0
+
+COPY . .
+
+RUN pip install torch torchvision argparse quadprog -i https://pypi.tuna.tsinghua.edu.cn/simple
