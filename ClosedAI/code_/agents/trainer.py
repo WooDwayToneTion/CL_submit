@@ -97,12 +97,12 @@ class CLTrainer(object):
             self.log.info('=> Load Done')
         return model
 
-    def forward(self, x):
+    def forward(self, x, task=None):
         return self.model.forward(x)
 
-    def predict(self, inputs):
+    def predict(self, inputs, task=None):
         self.model.eval()
-        out = self.forward(inputs)
+        out = self.forward(inputs, task)
         for t in out.keys():
             out[t] = out[t].detach()
         return out
@@ -122,7 +122,7 @@ class CLTrainer(object):
                 with torch.no_grad():
                     input = input.to(self.device)
                     target = target.to(self.device)
-                output = self.predict(input)
+                output = self.predict(input, task)
 
                 # Summarize the performance of all tasks, or 1 task, depends on dataloader.
                 # Calculated by total number of data.
@@ -155,7 +155,7 @@ class CLTrainer(object):
         for i, (inputs, task) in enumerate(dataloader):
             inputs = inputs.to(self.device)
             with torch.no_grad():
-                output = self.predict(inputs)
+                output = self.predict(inputs, task)
                 pred = get_pred(output, task)
             res.append(pred)
         if self.args.distributed:
